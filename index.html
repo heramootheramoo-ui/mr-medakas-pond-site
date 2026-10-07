@@ -13,7 +13,7 @@
 
   <header class="topbar">
     <div class="wrap bar">
-      <a class="brand" href="index.html"><span class="drop"></span>Mr Medaka's Pond</a>
+      <a class="brand" href="index.html"><img class="brand-face" src="assets/mr-medaka.png" alt="" width="26" height="26">Mr Medaka's Pond</a>
       <nav aria-label="Site">
         <a href="index.html" aria-current="page">Home</a>
         <a href="demo/index.html">Demo</a>
@@ -29,20 +29,28 @@
       <p class="lede">Keep and breed medaka in a little backyard pond. Days pass sixty times faster than
         yours, and a pond year lasts one real week.</p>
 
+      <div class="actions top">
+        <a class="btn primary" href="#">Get it on Google Play</a>
+      </div>
+
+      <div class="demo-banner">
+        <span class="demo-banner-big">PLAYABLE DEMO</span>
+        <span class="demo-banner-sub">This is an early slice of the pond — <b>not the full game</b>. The finished game is on Google&nbsp;Play.</span>
+      </div>
       <div class="window">
         <div class="window-bar">
           <span class="dots"><i></i><i></i><i></i></span>
-          <span class="window-title">pond</span>
-          <span class="window-live"><span class="live-dot"></span>playable</span>
+          <span class="window-title">medaka — demo</span>
+          <span class="tag-demo">DEMO</span>
         </div>
         <div class="window-body">
-          <iframe class="demo" src="demo/index.html" title="Mr Medaka's Pond — playable demo" loading="lazy"></iframe>
+          <iframe id="demoFrame" class="demo" src="demo/index.html" title="Mr Medaka's Pond — playable demo"></iframe>
+          <div class="demo-shield" id="demoShield" aria-hidden="true"></div>
         </div>
       </div>
       <p class="under">Tap or click the water to feed them. <a href="demo/index.html">Open it full screen →</a></p>
 
       <div class="actions">
-        <a class="btn primary" href="#">Get it on Google Play</a>
         <a class="btn ghost" href="mailto:heramootheramoo@gmail.com">Say hello</a>
       </div>
     </section>
@@ -139,6 +147,40 @@
       }
       show();
       setInterval(show, 7000);
+    })();
+
+    // A tap on the pond feeds the fish; a vertical swipe scrolls the page instead.
+    (function () {
+      var shield = document.getElementById("demoShield");
+      var frame = document.getElementById("demoFrame");
+      if (!shield || !frame) return;
+      var down = false, moved = false, sx = 0, sy = 0;
+      shield.addEventListener("pointerdown", function (e) {
+        down = true; moved = false; sx = e.clientX; sy = e.clientY;
+      });
+      shield.addEventListener("pointermove", function (e) {
+        if (!down) return;
+        if (Math.abs(e.clientX - sx) > 10 || Math.abs(e.clientY - sy) > 10) moved = true;
+      });
+      shield.addEventListener("pointercancel", function () { down = false; });
+      shield.addEventListener("pointerup", function (e) {
+        if (!down) return;
+        down = false;
+        if (moved) return;
+        try {
+          var r = frame.getBoundingClientRect();
+          var x = e.clientX - r.left, y = e.clientY - r.top;
+          var doc = frame.contentDocument; if (!doc) return;
+          var el = doc.elementFromPoint(x, y); if (!el) return;
+          var opts = { clientX: x, clientY: y, bubbles: true, cancelable: true, view: frame.contentWindow };
+          var node = (el.closest && el.closest("button")) || el;
+          var pe;
+          try { pe = new PointerEvent("pointerdown", Object.assign({ pointerId: 1, pointerType: e.pointerType || "touch", isPrimary: true, buttons: 1 }, opts)); }
+          catch (_) { pe = new MouseEvent("pointerdown", opts); }
+          node.dispatchEvent(pe);
+          if (node.tagName === "BUTTON") node.dispatchEvent(new MouseEvent("click", opts));
+        } catch (_) {}
+      });
     })();
   </script>
 </body>

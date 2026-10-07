@@ -1,17 +1,19 @@
 const META={"youkihi": {"w": 276, "h": 452, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "miyuki": {"w": 276, "h": 452, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "sanshoku": {"w": 276, "h": 452, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "shirohikari": {"w": 276, "h": 466, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "wild": {"w": 276, "h": 452, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "youkihihirenaga": {"w": 276, "h": 500, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "kurotsubame": {"w": 276, "h": 527, "head": 53, "eyeY": 92.1, "eyeX": 21.2, "er": 10.54, "ir": 14}, "youkihidaruma": {"w": 276, "h": 350, "head": 53, "eyeY": 92.1, "eyeX": 26.7, "er": 11.07, "ir": 15}};
 const cv=document.getElementById('c'),ctx=cv.getContext('2d');
 let W=1600,H=1000,scale=1,dpr=1;
-function resize(){dpr=Math.min(window.devicePixelRatio||1,1.5);const cw=cv.clientWidth,ch=cv.clientHeight;cv.width=cw*dpr;cv.height=ch*dpr;scale=Math.max(0.5,Math.min(cw/1400,ch/900,1.3));W=cw/scale;H=ch/scale;}
+function resize(){dpr=Math.min(window.devicePixelRatio||1,1);const cw=cv.clientWidth,ch=cv.clientHeight;cv.width=cw*dpr;cv.height=ch*dpr;scale=Math.max(0.5,Math.min(cw/1400,ch/900,1.3));W=cw/scale;H=ch/scale;}
 addEventListener('resize',resize);resize();
 const rnd=(a,b)=>a+Math.random()*(b-a);
-const names=Object.keys(META);
+const names=Object.keys(META).slice(0,5);
 const NATURE_OF={youkihi:'loving',miyuki:'zippy',sanshoku:'playful',shirohikari:'shy',wild:'curious',youkihihirenaga:'leader',kurotsubame:'feisty',youkihidaruma:'gentle'};const DEFAULTS={"burst": 190, "beats": 3.5, "rest": 2.8, "drag": 1.8, "turn": 14.5, "wander": 2.15, "twitch": 2.1, "swing": 0.42, "sway": 0.165, "beatHz": 7, "idleHz": 2.4, "flex": 0.18, "wave": 4.4, "finFlick": 0.8, "curl": 0.2, "space": 250, "avoid": 1.4, "align": 0.12, "regroupDist": 310, "regroup": 0.11, "size": 0.48, "ripple": 1.0};const P=Object.assign({},DEFAULTS);
 const fish=names.map((n,i)=>({n,img:document.getElementById('f-'+n),sh:document.getElementById('s-'+n),m:META[n],
   x:rnd(250,W-250),y:rnd(200,H-200),a:rnd(0,Math.PI*2),v:0,tv:0,av:0,ph:rnd(0,6),thrust:0,
   nature:NATURE_OF[n]||'loving',state:'hover',timer:rnd(0.1,1.5),hunger:rnd(0.6,1),excite:0,bend:0,amp:0.05,des:0,vt:0,beats:3,beatT:0,turnT:0}));
 const food=[],rip=[];
+const plants={hornwort:document.getElementById('p-hornwort')};
+const hornPlot=[];for(let i=0;i<4;i++)hornPlot.push({x:rnd(160,W-160),y:rnd(H*0.55,H-30),s:rnd(0.7,1.1),ph:rnd(0,6)});
 // ---- surface water: a small wave-equation heightfield disturbed by the fish ----
-const CELL=10;let wdirty=true;let GW=0,GH=0,wcur=null,wprev=null,wc=null,wctx=null,wimg=null,wacc=0;
+const CELL=18;let wdirty=true;let GW=0,GH=0,wcur=null,wprev=null,wc=null,wctx=null,wimg=null,wacc=0;
 function initWater(){GW=Math.ceil(W/CELL)+2;GH=Math.ceil(H/CELL)+2;wcur=new Float32Array(GW*GH);wprev=new Float32Array(GW*GH);
   wc=document.createElement('canvas');wc.width=GW;wc.height=GH;wctx=wc.getContext('2d');wimg=wctx.createImageData(GW,GH);}
 initWater();addEventListener('resize',initWater);
@@ -265,12 +267,14 @@ function frame(now){
    ctx.save();ctx.globalCompositeOperation='lighter';
    ctx.globalAlpha=0.055;_p1.setTransform(new DOMMatrix([1.4,0,0,1.4,t*9%717,t*5%717]));ctx.fillStyle=_p1;ctx.fillRect(0,0,W,H);
    ctx.restore();}
+  // hornwort: submerged, behind the fish
+  for(const q of hornPlot){const h=148*q.s,w=h*plants.hornwort.width/plants.hornwort.height,swx=Math.sin(now/900+q.ph)*5;ctx.drawImage(plants.hornwort,q.x-w/2+swx,q.y-h,w,h);}
   // food (below surface slightly, with shadow)
   for(const p of food){const a=p.t<FLOAT?1:Math.max(0,1-(p.t-FLOAT)/SINK)*0.6;ctx.globalAlpha=0.35*a;ctx.fillStyle='#000';ctx.beginPath();ctx.arc(p.x+5,p.y+7,p.r+1.5,0,7);ctx.fill();
     ctx.globalAlpha=a;const g=ctx.createRadialGradient(p.x-1,p.y-1,0.3,p.x,p.y,p.r);g.addColorStop(0,'#d9a766');g.addColorStop(1,'#7a4a1c');ctx.fillStyle=g;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fill()}
   ctx.globalAlpha=1;
-  for(const f of fish)drawFish(f,f.sh,16,24,10);
-  for(const f of fish)drawFish(f,f.img,0,0);
+  for(const f of fish)drawFish(f,f.sh,16,24,16);
+  for(const f of fish)drawFish(f,f.img,0,0,11);
   drawWater();
   if(typeof SHOWNAT!=='undefined'&&SHOWNAT){ctx.font='11px Silkscreen, ui-monospace, monospace';ctx.textAlign='center';
     for(const f of fish){const lbl=f.nature[0].toUpperCase()+f.nature.slice(1);const y=f.y+58*P.size/0.5;
@@ -279,7 +283,7 @@ function frame(now){
   for(const w of weed){ctx.save();ctx.translate(w.x,w.y);ctx.rotate(w.a);
     ctx.globalAlpha=0.35;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(6,9,w.r,w.r*0.72,0,0,7);ctx.fill();ctx.globalAlpha=1;
     const g=ctx.createRadialGradient(-w.r*0.3,-w.r*0.3,1,0,0,w.r);g.addColorStop(0,'#9fdc5a');g.addColorStop(1,'#3f7a22');
-    ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(0,0,w.r,w.r*0.72,0,0,7);ctx.fill();ctx.restore()}
+     ctx.fillStyle=g;ctx.beginPath();ctx.ellipse(0,0,w.r,w.r*0.72,0,0,7);ctx.fill();ctx.restore()}
   requestAnimationFrame(frame);
 }
 
