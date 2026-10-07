@@ -304,6 +304,38 @@ main > .quote-card {
 .fishcard figcaption b { display: block; font-family: var(--pixel); font-size: .62rem; color: #fff; }
 .fishcard figcaption span { font-size: .8rem; color: #a9c6bc; }
 
+.fishcard.mystery { background: #0b1a16; border-color: #16342c #050d0b #050d0b #16342c; }
+.fishcard.mystery img { filter: none; opacity: .92; }
+.mystery-art { position: relative; display: inline-block; line-height: 0; }
+.qmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--pixel);
+  font-size: 1.7rem;
+  color: #ffd873;
+  text-shadow: 0 2px 0 #000, 0 0 10px rgba(224, 123, 42, .6);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.combo-box {
+  margin-top: 1rem;
+  padding: .9rem 1rem;
+  background: #0f2a24;
+  border: 3px solid;
+  border-color: #2f6d5f #061511 #061511 #2f6d5f;
+  color: #dcefe7;
+  text-align: center;
+}
+.combo-box h3 { font-family: var(--pixel); font-size: .8rem; color: #ffd873; margin: .1rem 0 .65rem; }
+.combo-line { margin: 0; font-size: .95rem; }
+.combo-line b { color: #fff; }
+.combo-total { margin: .55rem 0 .1rem; }
+.combo-total b { font-family: var(--pixel); font-size: 1.1rem; color: #ffd873; }
+.combo-tiers { margin: .5rem 0 0; font-size: .85rem; color: #a9c6bc; }
+
 /* how it plays */
 .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: .8rem; }
 .step {
