@@ -5,45 +5,141 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mr Medaka's Pond</title>
   <meta name="description" content="A slow, calm game about keeping and breeding medaka in a little backyard pond.">
+  <link rel="icon" href="assets/icon-512.png">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="site">
-    <div class="wrap">
-      <a class="brand" href="index.html">Mr Medaka's Pond</a>
-      <nav aria-label="Site"><a href="privacy.html">Privacy Policy</a></nav>
+<body class="home">
+  <div class="pond-bg" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="wrap bar">
+      <a class="brand" href="index.html"><span class="drop"></span>Mr Medaka's Pond</a>
+      <nav aria-label="Site">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="demo/index.html">Demo</a>
+        <a href="privacy.html">Privacy</a>
+      </nav>
     </div>
   </header>
 
   <main class="wrap">
-    <h1>Mr Medaka's Pond</h1>
-    <p class="tagline">A slow, calm game about keeping and breeding medaka in a little backyard pond.</p>
+    <section class="hero">
+      <p class="kicker">A cosy medaka-keeping game · for Android</p>
+      <h1>Mr Medaka's Pond</h1>
+      <p class="lede">Keep and breed medaka in a little backyard pond. Days pass sixty times faster than
+        yours, and a pond year lasts one real week.</p>
 
-    <a class="button" href="#">Get it on Google Play</a>
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="window-title">pond</span>
+          <span class="window-live"><span class="live-dot"></span>playable</span>
+        </div>
+        <div class="window-body">
+          <iframe class="demo" src="demo/index.html" title="Mr Medaka's Pond — playable demo" loading="lazy"></iframe>
+        </div>
+      </div>
+      <p class="under">Tap or click the water to feed them. <a href="demo/index.html">Open it full screen →</a></p>
 
-    <h2>What it's like</h2>
-    <ul class="features">
-      <li>Real water chemistry: bacteria, nitrate, green water and the seasons.</li>
-      <li>Real breeding, with genetics, recessive genes and line breeding.</li>
-      <li>Fish with natures of their own.</li>
-      <li>Your own yard of buckets, tubs and ponds.</li>
-      <li>Trade fish face to face with a friend, phone to phone.</li>
-      <li>Gentle sayings from Zen, the Tao Te Ching and Zhuangzi.</li>
-    </ul>
+      <div class="actions">
+        <a class="btn primary" href="#">Get it on Google Play</a>
+        <a class="btn ghost" href="mailto:heramootheramoo@gmail.com">Say hello</a>
+      </div>
+    </section>
 
-    <p class="calm">No ads. No accounts. No streaks. No nagging notifications.</p>
+    <section class="card">
+      <h2>What it's like</h2>
+      <ul class="features">
+        <li><strong>Real water.</strong> Ammonia, nitrite and nitrate, green water and the bacteria that tame it. Plants soak up waste; water changes put things right.</li>
+        <li><strong>Real breeding.</strong> Colour, body and fins are inherited separately. Hidden recessive genes, line breeding, and the rare brand-new colour.</li>
+        <li><strong>Fish with natures.</strong> Shy, curious, playful, loving, feisty. A crowded tub turns scrappy.</li>
+        <li><strong>Your yard, your way.</strong> Pots, containers and ponds; a zen garden or a lawn; lotus in real cultivar colours.</li>
+        <li><strong>Trade face to face.</strong> Two phones, one code, and fish cross the gap in a little bag.</li>
+        <li><strong>Breathe.</strong> Now and then a breeze carries a line from Zen, the Tao Te Ching or Zhuangzi.</li>
+      </ul>
+    </section>
 
-    <h2>Privacy</h2>
-    <p>The game keeps everything on your phone. Read the <a href="privacy.html">Privacy Policy</a>.</p>
+    <section class="card">
+      <h2>Meet the fish</h2>
+      <div class="fishgrid">
+        <figure class="fishcard"><img src="assets/fish/youkihi_body.png" alt="Youkihi"><figcaption><b>Youkihi</b><span>A deep, even orange. The classic.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/youkihidaruma_body.png" alt="Youkihi Daruma"><figcaption><b>Youkihi Daruma</b><span>Orange, with a round, short body.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/youkihihirenaga_body.png" alt="Youkihi Hirenaga"><figcaption><b>Youkihi Hirenaga</b><span>Orange, with long trailing fins.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/shirohikari_body.png" alt="Shiro Hikari"><figcaption><b>Shiro Hikari</b><span>White with a bright metallic shine.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/miyuki_body.png" alt="Miyuki"><figcaption><b>Miyuki</b><span>White with red markings, like snow.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/sanshoku_body.png" alt="Sanshoku"><figcaption><b>Sanshoku</b><span>Three colours on one fish.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/kurotsubame_body.png" alt="Kuro Tsubame"><figcaption><b>Kuro Tsubame</b><span>Black and swallow-tailed.</span></figcaption></figure>
+        <figure class="fishcard"><img src="assets/fish/wild_body.png" alt="Nogara (wild)"><figcaption><b>Nogara (wild)</b><span>The plain wild medaka, brown and quiet.</span></figcaption></figure>
+      </div>
+    </section>
 
-    <h2>Contact</h2>
-    <p>heramootheramoo@gmail.com</p>
+    <section class="card">
+      <h2>Watch it</h2>
+      <div class="window">
+        <div class="window-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="window-title">trailer</span>
+          <span class="window-live">0:15</span>
+        </div>
+        <div class="window-body">
+          <video class="screen" controls preload="metadata" poster="assets/feature.png">
+            <source src="assets/trailer.mp4" type="video/mp4">
+            Your browser can't play the video.
+          </video>
+        </div>
+      </div>
+      <p class="under">Sound on. The seasons turn while you live your life.</p>
+    </section>
+
+    <section class="card">
+      <h2>How it plays</h2>
+      <div class="steps">
+        <div class="step"><span class="n">1</span><b>Hang a mop.</b> Females lay their eggs on it at first light, safe from the grown-ups.</div>
+        <div class="step"><span class="n">2</span><b>Move the mop.</b> Lift it, eggs and all, into a tub with no adults in it.</div>
+        <div class="step"><span class="n">3</span><b>Raise the fry.</b> Green water and little food, and they grow up in a few days.</div>
+      </div>
+    </section>
+
+    <section class="quote-card">
+      <blockquote id="quote"></blockquote>
+    </section>
   </main>
 
   <footer class="site">
-    <div class="wrap">
-      <p>Mr Medaka's Pond · <a href="privacy.html">Privacy Policy</a></p>
+    <div class="wrap footgrid">
+      <div>
+        <p><a href="privacy.html">Privacy Policy</a> · <a href="mailto:heramootheramoo@gmail.com">heramootheramoo@gmail.com</a></p>
+        <p class="tiny">Made in Kyoto. No ads, no accounts, no trackers.</p>
+      </div>
+      <div class="right">
+        <span class="counter">VISITORS 000042</span>
+        <p class="tiny">Best viewed at 1024 × 768</p>
+      </div>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var lines = [
+        { t: "Sit quietly, doing nothing, spring comes, and the grass grows by itself.", w: "Zen proverb" },
+        { t: "Nature does not hurry, yet everything is accomplished.", w: "Laozi" },
+        { t: "A journey of a thousand miles begins with a single step.", w: "Laozi, Tao Te Ching" },
+        { t: "When I let go of what I am, I become what I might be.", w: "Laozi" },
+        { t: "The obstacle is the path.", w: "Zen proverb" },
+        { t: "Do not seek the truth; only cease to cherish opinions.", w: "Seng-ts'an" }
+      ];
+      var el = document.getElementById("quote"), i = 0;
+      function show() {
+        el.style.opacity = 0;
+        setTimeout(function () {
+          el.innerHTML = "&ldquo;" + lines[i].t + "&rdquo;<span class='who'>— " + lines[i].w + "</span>";
+          el.style.opacity = 1;
+          i = (i + 1) % lines.length;
+        }, 600);
+      }
+      show();
+      setInterval(show, 7000);
+    })();
+  </script>
 </body>
 </html>
