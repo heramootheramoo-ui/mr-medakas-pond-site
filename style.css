@@ -1,0 +1,191 @@
+/* Mr Medaka's Pond: a calm, pond-green site. System fonts only, no external requests. */
+
+:root {
+  --bg: #f3f7f3;
+  --surface: #ffffff;
+  --ink: #1d2b26;
+  --muted: #4c5f57;
+  --accent: #2f6f5e;
+  --accent-ink: #ffffff;
+  --koi: #c4572a;
+  --line: #d5e2dc;
+  --measure: 38rem;
+  --radius: 14px;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1a17;
+    --surface: #16241f;
+    --ink: #e6efea;
+    --muted: #a9bdb4;
+    --accent: #7cc4a8;
+    --accent-ink: #0f1a17;
+    --koi: #f0874a;
+    --line: #26392f;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+  line-height: 1.65;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem) 1rem 3rem;
+}
+
+header.site {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+header.site .wrap {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.brand::before {
+  content: "";
+  display: inline-block;
+  width: 0.9em;
+  height: 0.55em;
+  margin-right: 0.45em;
+  border-radius: 50% 40% 40% 50%;
+  background: var(--koi);
+  vertical-align: 0.1em;
+}
+
+nav a {
+  color: var(--accent);
+}
+
+h1,
+h2 {
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 2.9rem);
+  margin: 0.5rem 0 0.75rem;
+}
+
+h2 {
+  font-size: clamp(1.25rem, 1.1rem + 0.8vw, 1.5rem);
+  margin: 2.25rem 0 0.5rem;
+}
+
+p,
+ul {
+  margin: 0 0 1rem;
+}
+
+.tagline {
+  font-size: clamp(1.1rem, 1rem + 0.6vw, 1.3rem);
+  color: var(--muted);
+}
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.15em;
+}
+
+a:focus-visible,
+.button:focus-visible {
+  outline: 3px solid var(--koi);
+  outline-offset: 3px;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  position: relative;
+  padding: 0.65rem 0 0.65rem 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.features li::before {
+  content: "";
+  position: absolute;
+  left: 0.2rem;
+  top: 1.15rem;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.calm {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+.button {
+  display: inline-block;
+  margin: 0.5rem 0 1.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button:hover {
+  filter: brightness(1.08);
+}
+
+.policy h1 {
+  font-size: clamp(1.75rem, 1.4rem + 1.8vw, 2.4rem);
+}
+
+.updated {
+  color: var(--muted);
+  font-style: italic;
+}
+
+footer.site {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.95em;
+}
+
+footer.site .wrap {
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+}
