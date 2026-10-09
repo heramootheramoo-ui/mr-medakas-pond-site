@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Theramoo — everywhere a moo moo</title>
+<style>
+  @font-face {
+    font-family: 'Silkscreen';
+    src: url('assets/silkscreen.ttf') format('truetype');
+    font-display: swap;
+  }
+  :root {
+    --deep: #05291a;
+    --emerald: #0c5a34;
+    --mint: #a8f0c4;
+    --gold: #ffd447;
+    --cream: #fff8d6;
+    --ink: #0a2717;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Silkscreen', ui-monospace, monospace;
+    overflow: hidden;
+    -webkit-user-select: none; user-select: none;
+    cursor: pointer;
+  }
+
+  /* ------------------------------------------------------------------ backdrop */
+  .stage {
+    position: fixed; inset: 0;
+    display: grid; place-items: center;
+    background: radial-gradient(120% 90% at 50% 18%, #1c8a52 0%, #0c5a34 42%, #05291a 100%);
+    overflow: hidden;
+  }
+  .rays {
+    position: absolute; inset: -50%;
+    background: repeating-conic-gradient(from 0deg at 50% 50%,
+      rgba(255,255,255,.06) 0deg 6deg, transparent 6deg 14deg);
+    animation: spin 40s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(75% 70% at 50% 45%, transparent 55%, rgba(0,0,0,.55) 100%);
+  }
+  .spark {
+    position: absolute; width: 14px; height: 14px; opacity: 0; background: var(--cream);
+    clip-path: polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+    animation: twinkle 2.6s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0; transform: scale(.4) rotate(0deg); }
+    50% { opacity: .95; transform: scale(1) rotate(45deg); }
+  }
+
+  /* ------------------------------------------------------------------ content */
+  .content { position: relative; text-align: center; padding: 4vmin; }
+
+  .cow-row {
+    position: relative; z-index: 4;
+    display: flex; align-items: flex-end; justify-content: center; gap: 22px; margin-bottom: 6px;
+    transform: translateY(30px) scale(.8); opacity: 0;
+  }
+  .stage.go .cow-row { animation: hopin 600ms cubic-bezier(.2,1.4,.4,1) 120ms forwards; }
+  @keyframes hopin {
+    0% { transform: translateY(60px) scale(.8); opacity: 0; }
+    60% { transform: translateY(-10px) scale(1.05); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
+  .cowpair { display: flex; flex-direction: column; align-items: center; }
+  .cow { width: clamp(56px, 14vw, 120px); height: auto; }
+  .stage.go .cow { animation: bob 1.1s ease-in-out 720ms infinite; }
+  .stage.go .cowpair:nth-child(2) .cow { animation-delay: 980ms; }
+  @keyframes bob { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-7px) } }
+
+  .bubble {
+    position: relative; margin-bottom: 6px;
+    background: var(--cream); color: var(--ink);
+    border: 4px solid var(--ink); border-radius: 14px;
+    padding: 6px 12px; font-size: clamp(11px, 2.8vw, 18px);
+    transform: scale(0); transform-origin: bottom center;
+  }
+  .bubble::after {
+    content: ""; position: absolute; left: 50%; margin-left: -8px; bottom: -14px;
+    border: 8px solid transparent; border-top-color: var(--ink);
+  }
+  .stage.go .bubble { animation: bpop 260ms cubic-bezier(.2,1.6,.4,1) 700ms forwards; }
+  .stage.go .cowpair:nth-child(2) .bubble { animation-delay: 950ms; }
+  @keyframes bpop { 0% { transform: scale(0) } 100% { transform: scale(1) } }
+
+  /* logo */
+  .logo-wrap { position: relative; display: inline-block; transform: scale(.4); opacity: 0; }
+  .stage.go .logo-wrap { animation: pop 620ms cubic-bezier(.2,1.5,.4,1) 480ms forwards; }
+  @keyframes pop {
+    0% { transform: scale(.4) translateY(18px); opacity: 0; }
+    70% { transform: scale(1.08) translateY(0); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .arc {
+    position: absolute; left: 50%; top: 50%; width: 116%; height: 168%;
+    transform: translate(-50%, -60%); z-index: 0; opacity: 0;
+  }
+  .stage.go .arc { animation: fade 500ms ease 700ms forwards; }
+  @keyframes fade { to { opacity: 1; } }
+  .logo-word {
+    position: relative; z-index: 2; display: block; height: auto;
+    width: clamp(280px, 84vw, 940px);
+    transform: skewX(-8deg); transform-origin: center;
+  }
+  .after .logo-word { width: clamp(220px, 62vw, 560px); }
+
+  .shine-rect { transform: translateX(-1600px); }
+  .stage.go .shine-rect { animation: sweep 1000ms ease 950ms 1 both; }
+  @keyframes sweep {
+    from { transform: translateX(-1600px); }
+    to { transform: translateX(1600px); }
+  }
+
+  .tagline {
+    position: relative; z-index: 4; margin-top: 16px;
+    font-size: clamp(12px, 3vw, 22px); letter-spacing: .22em; color: var(--mint); opacity: 0;
+  }
+  .stage.go .tagline { animation: fade 500ms ease 1500ms forwards; }
+
+  /* ------------------------------------------------------------------ start / replay */
+  .start, .after { position: absolute; inset: 0; display: grid; place-items: center; z-index: 20; text-align: center; }
+  .stage.go .start { display: none; }
+  .start .prompt {
+    font-size: clamp(14px, 3.6vw, 24px); letter-spacing: .18em; color: var(--cream);
+    animation: blink 1.4s steps(2, jump-none) infinite; text-shadow: 0 3px 0 #06281a;
+  }
+  @keyframes blink { 50% { opacity: .35; } }
+
+  .after { display: none; }
+  .stage.done .after { display: grid; }
+  .stage.done .content { opacity: 0; transition: opacity .45s; }
+  .after .btnrow { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 20px; }
+  .after a, .after button {
+    font-family: inherit; font-size: clamp(11px,2.8vw,15px);
+    color: var(--ink); background: var(--gold);
+    border: 4px solid var(--ink); box-shadow: 0 5px 0 var(--ink);
+    padding: .5rem .9rem; text-decoration: none; cursor: pointer;
+  }
+  .after a.ghost, .after button.ghost { background: var(--mint); }
+  .after a:active, .after button:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--ink); }
+</style>
+</head>
+<body>
+  <div class="stage" id="stage">
+
+    <div class="rays"></div>
+    <div class="vignette"></div>
+    <i class="spark" style="left:14%; top:22%; animation-delay:.2s"></i>
+    <i class="spark" style="left:82%; top:18%; animation-delay:.9s"></i>
+    <i class="spark" style="left:70%; top:66%; animation-delay:1.5s"></i>
+    <i class="spark" style="left:24%; top:70%; animation-delay:2.1s"></i>
+
+    <!-- shared gold gradient, defined once for both logo instances -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff8d6"/>
+          <stop offset="0.30" stop-color="#ffe98a"/>
+          <stop offset="0.48" stop-color="#ffd447"/>
+          <stop offset="0.60" stop-color="#f2a300"/>
+          <stop offset="0.78" stop-color="#ffe98a"/>
+          <stop offset="1" stop-color="#fff8d6"/>
+        </linearGradient>
+        <linearGradient id="arcgold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe98a"/>
+          <stop offset="1" stop-color="#f2a300"/>
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <div class="content">
+      <div class="cow-row">
+        <div class="cowpair">
+          <div class="bubble">moo!</div>
+          <svg class="cow" viewBox="0 0 120 100" role="img" aria-label="a little blue cow">
+            <path d="M30 24 L18 3 L44 17 Z" fill="#d7e6ff" stroke="#0a2717" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M90 24 L102 3 L76 17 Z" fill="#d7e6ff" stroke="#0a2717" stroke-width="4" stroke-linejoin="round"/>
+            <ellipse cx="18" cy="48" rx="15" ry="10" fill="#a9c4e6" stroke="#0a2717" stroke-width="4" transform="rotate(-22 18 48)"/>
+            <ellipse cx="102" cy="48" rx="15" ry="10" fill="#a9c4e6" stroke="#0a2717" stroke-width="4" transform="rotate(22 102 48)"/>
+            <rect x="24" y="24" width="72" height="68" rx="24" fill="#e8f0ff" stroke="#0a2717" stroke-width="5"/>
+            <path d="M72 26 q26 6 22 32 q-18 6 -30 -8 z" fill="#0a2717"/>
+            <circle cx="46" cy="54" r="6.5" fill="#0a2717"/>
+            <circle cx="76" cy="54" r="6.5" fill="#e8f0ff"/>
+            <ellipse cx="60" cy="78" rx="25" ry="15" fill="#bcd6f0" stroke="#0a2717" stroke-width="4"/>
+            <circle cx="51" cy="78" r="3.2" fill="#0a2717"/>
+            <circle cx="69" cy="78" r="3.2" fill="#0a2717"/>
+          </svg>
+        </div>
+        <div class="cowpair">
+          <div class="bubble">moo!</div>
+          <svg class="cow" viewBox="0 0 120 100" role="img" aria-label="a little pink cow">
+            <path d="M30 24 L18 3 L44 17 Z" fill="#ffe0e8" stroke="#0a2717" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M90 24 L102 3 L76 17 Z" fill="#ffe0e8" stroke="#0a2717" stroke-width="4" stroke-linejoin="round"/>
+            <ellipse cx="18" cy="48" rx="15" ry="10" fill="#e6b9c6" stroke="#0a2717" stroke-width="4" transform="rotate(-22 18 48)"/>
+            <ellipse cx="102" cy="48" rx="15" ry="10" fill="#e6b9c6" stroke="#0a2717" stroke-width="4" transform="rotate(22 102 48)"/>
+            <rect x="24" y="24" width="72" height="68" rx="24" fill="#fff0f4" stroke="#0a2717" stroke-width="5"/>
+            <path d="M72 26 q26 6 22 32 q-18 6 -30 -8 z" fill="#0a2717"/>
+            <circle cx="46" cy="54" r="6.5" fill="#0a2717"/>
+            <circle cx="76" cy="54" r="6.5" fill="#fff0f4"/>
+            <ellipse cx="60" cy="78" rx="25" ry="15" fill="#f3a9bd" stroke="#0a2717" stroke-width="4"/>
+            <circle cx="51" cy="78" r="3.2" fill="#0a2717"/>
+            <circle cx="69" cy="78" r="3.2" fill="#0a2717"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="logo-wrap">
+        <svg class="arc" viewBox="0 0 600 260" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M18 200 C 120 40, 480 40, 582 200 C 470 120, 130 120, 18 200 Z"
+                fill="none" stroke="#0a2717" stroke-width="30" stroke-linejoin="round"/>
+          <path d="M18 200 C 120 40, 480 40, 582 200 C 470 120, 130 120, 18 200 Z"
+                fill="none" stroke="url(#arcgold)" stroke-width="16" stroke-linejoin="round"/>
+        </svg>
+        <svg class="logo-word" viewBox="0 0 1000 260" role="img" aria-label="Theramoo">
+          <defs>
+            <clipPath id="logoClip">
+              <text x="500" y="200" text-anchor="middle" font-family="Silkscreen, monospace"
+                    font-size="180" letter-spacing="2">THERAMOO</text>
+            </clipPath>
+            <linearGradient id="shineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#ffffff" stop-opacity="0"/>
+              <stop offset="0.5" stop-color="#ffffff" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <text x="500" y="200" text-anchor="middle"
+                font-family="Silkscreen, monospace" font-size="180" letter-spacing="2"
+                fill="url(#gold)" stroke="#0a2717" stroke-width="20"
+                stroke-linejoin="round" style="paint-order:stroke">THERAMOO</text>
+          <!-- a soft highlight that sweeps across, clipped to the letters themselves -->
+          <rect class="shine-rect" x="0" y="-50" width="240" height="380"
+                fill="url(#shineGrad)" clip-path="url(#logoClip)"/>
+        </svg>
+      </div>
+
+      <div class="tagline">EVERYWHERE A MOO MOO</div>
+    </div>
+
+    <div class="start" id="start">
+      <div>
+        <div class="prompt">TAP TO START</div>
+      </div>
+    </div>
+
+    <div class="after">
+      <div>
+        <svg class="logo-word" viewBox="0 0 1000 260" role="img" aria-label="Theramoo">
+          <text x="500" y="200" text-anchor="middle"
+                font-family="Silkscreen, monospace" font-size="180" letter-spacing="2"
+                fill="url(#gold)" stroke="#0a2717" stroke-width="20"
+                stroke-linejoin="round" style="paint-order:stroke">THERAMOO</text>
+        </svg>
+        <div class="btnrow">
+          <button class="ghost" onclick="replay()">Watch again</button>
+          <a href="index.html">Mr Medaka's Pond →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  var stage = document.getElementById('stage');
+  var started = false;
+
+  function play() {
+    if (started) return;
+    started = true;
+    stage.classList.add('go');
+    setTimeout(function () { stage.classList.add('done'); }, 3400);
+  }
+
+  function replay() {
+    stage.classList.remove('go', 'done');
+    started = false;
+    void stage.offsetWidth; // restart animations cleanly
+    play();
+  }
+
+  // Fit the SVG box to the actual glyphs (padding for the outline), so the word is never clipped,
+  // whatever the font metrics. Both logos share the fitted viewBox.
+  function fitLogo(svg) {
+    var t = svg.querySelector(':scope > text'); // the visible label, not the clip copy
+    if (!t) return;
+    var b = t.getBBox();
+    var pad = 28;
+    svg.setAttribute('viewBox', (b.x - pad) + ' ' + (b.y - pad) + ' ' + (b.width + pad * 2) + ' ' + (b.height + pad * 2));
+  }
+  function fitAll() {
+    var svgs = document.querySelectorAll('.logo-word');
+    if (!svgs.length) return;
+    fitLogo(svgs[0]);
+    var vb = svgs[0].getAttribute('viewBox');
+    for (var i = 1; i < svgs.length; i++) svgs[i].setAttribute('viewBox', vb);
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll);
+  window.addEventListener('load', fitAll);
+  setTimeout(fitAll, 500);
+
+  stage.addEventListener('click', function () {
+    if (!stage.classList.contains('go')) play();
+  });
+  document.addEventListener('keydown', function () {
+    if (!stage.classList.contains('go')) play();
+  });
+</script>
+</body>
+</html>
